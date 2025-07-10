@@ -32,6 +32,33 @@ export const Demo = () => {
             </li>
           );
         })}
+
+        {store && store.contactos?.map((item, index) => {
+          
+        function deleteContact (indexToDelete) {
+          dispatch({
+            type: "delete_contact",
+            payload: {eliminar:indexToDelete},
+          });
+        };
+          return (
+            <li
+              key={index}  // React key for list items.
+              className="list-group-item d-flex justify-content-between">
+              <div>
+                <p>Name: {item.name} </p>
+                <p>Phone: {item.phone} </p>
+              </div>
+              <div> 
+                  <button className="btn btn-success"
+                    onClick={() =>deleteContact(index)}>
+                    Change Color
+                  </button>
+            
+              </div>
+            </li>
+          );
+        })}
       </ul>
       <br />
 
