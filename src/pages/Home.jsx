@@ -52,8 +52,13 @@ export const Home = () => {
 						  </div>
 						  </div>
 						  <div> 
-							<Link to="/Demo">
-							  <button className="btn btn-success btn-sm m-1">
+							<Link to={`contact/${item.id}`}>
+							  <button className="btn btn-success btn-sm m-1"
+							  onClick={() => dispatch({
+								type:"edit_contact",
+								payload:item
+
+							  })}>
 								editar
 							  </button>
 							</Link>

@@ -1,50 +1,45 @@
+
 import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
-import rigoImageUrl from "../assets/img/rigo-baby.jpg";
 import useGlobalReducer from "../hooks/useGlobalReducer";
+import PropTypes from "prop-types";
 
 export const Contact = () => {
-  const { store, dispatch } = useGlobalReducer();
-  const { theId } = useParams();
+  const { store } = useGlobalReducer();
+  const { contactId } = useParams();
 
-  // Initialize local state for contact fields
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-  const [address, setAddress] = useState("");
+  const [contacto, setContacto] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    address: "",
+    id:""
+  });
 
-  useEffect(() => {
-    const contact = store.contacts?.find(contacto => contacto.id === parseInt(theId));
-    if (contact) {
-      setName(contact.name);
-      setPhone(contact.phone);
-      setEmail(contact.email);
-      setAddress(contact.address);
-    }
-  }, [store.contactos, theId]);
+    useEffect(() => {
+      console.log(store.editContact)
+     setContacto(store.editContact)
+    }, []);
+
 
   function editContacto() {
     const requestOptions = {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        name,
-        phone,
-        email,
-        address,
+        name: contacto.name,
+        phone: contacto.phone,
+        email: contacto.email,
+        address: contacto.address,
         is_done: false,
+        agenda_slug: "NahuelPerrone"
       }),
     };
 
-    fetch(`https://playground.4geeks.com/contact/agendas/NahuelPerrone/contacts` + theId , requestOptions)
+    fetch(`https://playground.4geeks.com/contact/agendas/NahuelPerrone/contacts/${contactId}`, requestOptions)
       .then((response) => response.json())
-      .then((data) => {
-        dispatch({
-          type: "list_contact",
-          payload: data,
-        });
-      })
+      .then((data) => console.log("Contacto actualizado:", data))
+      
   }
 
   return (
@@ -57,8 +52,10 @@ export const Contact = () => {
               <input
                 type="text"
                 className="form-control mt-2"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={contacto.name}
+                onChange={(e) =>
+                  setContacto({ ...contacto, name: e.target.value })
+                }
               />
             </div>
             <div className="col-8">
@@ -66,8 +63,10 @@ export const Contact = () => {
               <input
                 type="text"
                 className="form-control mt-2"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                value={contacto.phone}
+                onChange={(e) =>
+                  setContacto({ ...contacto, phone: e.target.value })
+                }
               />
             </div>
             <div className="col-8">
@@ -75,8 +74,10 @@ export const Contact = () => {
               <input
                 type="text"
                 className="form-control mt-2"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={contacto.email}
+                onChange={(e) =>
+                  setContacto({ ...contacto, email: e.target.value })
+                }
               />
             </div>
             <div className="col-8">
@@ -84,12 +85,17 @@ export const Contact = () => {
               <input
                 type="text"
                 className="form-control mt-2"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
+                value={contacto.address}
+                onChange={(e) =>
+                  setContacto({ ...contacto, address: e.target.value })
+                }
               />
             </div>
             <Link className="text-center" to="/">
-              <button className="btn btn-success m-1 w-50 mt-4" onClick={editContacto}>
+              <button
+                className="btn btn-success m-1 w-50 mt-4"
+                onClick={editContacto}
+              >
                 Save
               </button>
             </Link>
@@ -101,4 +107,10 @@ export const Contact = () => {
       </Link>
     </div>
   );
+};
+
+Contact.propTypes = {
+  // Although 'match' prop is defined here, it is not used in the component.
+  // Consider removing or using it as needed.
+  match: PropTypes.object
 };

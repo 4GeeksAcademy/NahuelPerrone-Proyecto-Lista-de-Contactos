@@ -13,7 +13,8 @@ export const initialStore=()=>{
         background: null,
       }
     ],
-    contactos:[]  
+    contactos:[],
+    editContact:{name:"texto"}
   }
 }
 
@@ -35,7 +36,15 @@ export default function storeReducer(store, action = {}) {
       return {
         ...store,
       contactos: newContact
-      }; 
+    
+    }; 
+    case 'edit_contact':
+
+
+      return {
+        ...store,
+      editContact: action.payload
+      };   
         
     default:
       throw Error('Unknown action.');
